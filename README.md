@@ -1,5 +1,5 @@
 Features
-Responsive Design: The user interface is designed to be responsive, ensuring a consistent experience across different devices and screen sizes.
+RESPONSIVE DESIGN: The user interface is designed to be responsive, ensuring a consistent experience across different devices and screen sizes.
 
 Clean Look and Feel: The app has a clean and modern design, making it easy for users to navigate and interact with.
 
@@ -9,9 +9,10 @@ Error Handling: The app includes error handling using the catch method for the f
 
 Code Quality: The codebase follows best practices for variable and function naming, ensuring readability and maintainability. Comments are provided to describe the logic of functions where necessary.
 
-Code Reusability: The application promotes code reusability by using class selectors for styling and organizing the CSS code. JavaScript functions are designed to be reusable and modular.
+CODE REUSEABILITY: The application promotes code reusability by using class selectors for styling and organizing the CSS code. JavaScript functions are designed to be reusable and modular.
 
-Technologies Used
+TECHNOLOGY USED
+
 HTML: Used for structuring the content and layout of the web application.
 
 CSS: Utilized for styling the user interface and applying visual effects.
