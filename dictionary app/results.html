@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictionary Results</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    #result {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fdf9f9;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .audio-container {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .audio-container audio {
+        margin-right: 10px;
+    }
+    body{
+        background-image: url('./dictionary.jpeg');
+    }
+</style>
+</head>
+<body>
+    <h1>Dictionary Results</h1>
+    <div id="result"></div>
+
+    <script>
+        // Function to parse query parameters from URL
+        function parseQueryParameters() {
+            var queryString = window.location.search.substring(1);
+            var queryParams = {};
+            var pairs = queryString.split("&");
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split("=");
+                var key = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1] || "");
+                queryParams[key] = value;
+            }
+            return queryParams;
+        }
+
+        // Fetch data based on query parameter
+        window.addEventListener("DOMContentLoaded", function() {
+            var queryParams = parseQueryParameters();
+            var word = queryParams["word"];
+            // Fetch data using the word
+            fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var resultDiv = document.getElementById("result");
+                    data.forEach(entry => {
+                        var h2 = document.createElement("h2");
+                        h2.textContent = entry.word;
+                        resultDiv.appendChild(h2);
+
+                        entry.meanings.forEach(meaning => {
+                            var pPartOfSpeech = document.createElement("p");
+                            pPartOfSpeech.innerHTML = `<strong>Part of Speech:</strong> ${meaning.partOfSpeech}`;
+                            resultDiv.appendChild(pPartOfSpeech);
+
+                            meaning.definitions.forEach(definition => {
+                                var pDefinition = document.createElement("p");
+                                pDefinition.innerHTML = `<strong>Definition:</strong> ${definition.definition}`;
+                                resultDiv.appendChild(pDefinition);
+
+                                if (definition.example) {
+                                    var pExample = document.createElement("p");
+                                    pExample.innerHTML = `<strong>Example:</strong> ${definition.example}`;
+                                    resultDiv.appendChild(pExample);
+                                }
+                            });
+                        });
+
+                        entry.phonetics.forEach(phonetic => {
+                            if (phonetic.audio) {
+                                var audio = document.createElement("audio");
+                                audio.src = phonetic.audio;
+                                audio.controls = true;
+
+                                var audioContainer = document.createElement("div");
+                                audioContainer.classList.add("audio-container");
+                                audioContainer.appendChild(audio);
+                                resultDiv.appendChild(audioContainer);
+                            }
+                        });
+
+                        resultDiv.appendChild(document.createElement("hr")); // Add a horizontal line between entries
+                    });
+                    document.body.append(resultDiv);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    var resultDiv = document.getElementById("result");
+                    resultDiv.textContent = 'An error occurred while fetching data';
+                    document.body.append(resultDiv);
+                });
+        });
+    </script>
+</body>
+</html>
